@@ -1,0 +1,48 @@
+/* ===== A4 overrides (dupa CSS-ul lui A2) ===== */
+.prod__visual > picture,.prod__layers picture{display:contents}
+.prod__hero{-webkit-user-drag:none}
+
+/* motion.css pune position:relative pe .prod__visual; layout-ul A2 il vrea absolute */
+.hero .prod__visual{position:absolute}
+
+/* SMASH: in stage (acelasi stacking context cu burgerul si video-ul), in spatele burgerului, literele ies deasupra calotei.
+   --wv/--wt reproduc geometria cutiei vizuale (cq* = stage); calota incepe la ~22% din inaltimea imaginii */
+.hero__stage > .hero__word{
+  --wvh:min(125cqw, calc((100cqh - var(--info-h)) / .62));
+  --wvtop:calc(((100cqh - var(--info-h)) - .62 * var(--wvh)) / 2 - .17 * var(--wvh));
+  --wfs:min(37vw, 52vh);
+  inset:auto 0 auto 0;height:auto;overflow:visible;z-index:0;
+  top:max(4px, calc(var(--wvtop) + .222 * var(--wvh) - var(--wfs) * .66));
+  place-items:start center;
+}
+.hero__stage > .hero__word span{font-size:var(--wfs);margin-top:0;line-height:.8;padding-top:0}
+
+/* video: lighten = fundalul lui se pierde peste SMASH si pagina; aliniat la hero_cut (translate/scale la start), contra-zoom pe durata buclei */
+.prod__loopwrap{position:absolute;inset:0;pointer-events:none;mix-blend-mode:lighten;overflow:hidden}
+.prod__loopin{position:absolute;inset:0;transform:translate(var(--vtx),var(--vty)) scale(var(--vs));transform-origin:50% 50%}
+.prod__loopwrap.is-playing .prod__loopin{animation:mx-vcounter var(--vdur) linear infinite}
+.prod__loopwrap.is-paused .prod__loopin{animation-play-state:paused}
+@keyframes mx-vcounter{50%{transform:translate(var(--vtx),var(--vty)) scale(calc(var(--vs) * var(--vk)))}}
+.prod__loopwrap .prod__loop{-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent),linear-gradient(180deg,transparent,#000 8%,#000 92%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent),linear-gradient(180deg,transparent,#000 8%,#000 92%,transparent);mask-composite:intersect}
+@media (prefers-reduced-motion:reduce){.prod__loopwrap{display:none}}
+
+@media (min-width:900px){
+  /* desktop: SMASH centrat pe burger (cutia vizuala e in dreapta), litere ceva mai late decat burgerul */
+  .hero__stage > .hero__word{
+    --wvh:min(calc(100cqh / .62), 64vw);
+    --wvtop:calc((100cqh - .62 * var(--wvh)) / 2 - .17 * var(--wvh));
+    --wfs:calc(var(--wvh) * .31);
+    left:auto;right:calc(var(--pad) * .5);width:calc(var(--wvh) * .8);
+    top:max(4px, calc(var(--wvtop) + .222 * var(--wvh) - var(--wfs) * .62));
+  }
+  .hero__stage > .hero__word span{-webkit-text-stroke-width:2px}
+  /* sagetile in randul CTA, nu peste burger */
+  .hero__nav{bottom:-74px}
+
+}
+
+/* Ce are? deschis: SMASH se stinge (nu concureaza cu etichetele), butonul de pauza dispare */
+.hero__word span{transition:opacity .3s ease-out}
+.hero:has(.prod.is-exploded) .hero__word span{opacity:.1}
+.prod.is-exploded .prod__pause{display:none}
+@media (prefers-reduced-motion:reduce){.hero__word span{transition:none}}

@@ -45,11 +45,26 @@ products, N = P["products"], len(P["products"])
 
 def fm(x): return f"{x:.2f}".replace(".", ",")
 
+# miniaturi pentru selectorul de produse si cardul din panoul de navigare: patrat din hero_cut, 128 px, WebP cu alfa (~3-5 KB)
+def make_thumb(slug):
+    from PIL import Image as _Im
+    im = _Im.open(MO / "layers" / slug / "hero_cut.webp").convert("RGBA")
+    bb = im.getchannel("A").point(lambda v: 255 if v > 40 else 0).getbbox()
+    cx, cy = (bb[0] + bb[2]) / 2, (bb[1] + bb[3]) / 2
+    side = (bb[2] - bb[0]) * 0.86
+    box = tuple(round(v) for v in (cx - side / 2, cy - side / 2, cx + side / 2, cy + side / 2))
+    th = im.crop(box).resize((112, 112), _Im.LANCZOS)
+    out = IMG / slug / "thumb-128.webp"; th.save(out, "WEBP", quality=68, method=6)
+    return out.stat().st_size
+for _p in products: make_thumb(_p["slug"])
+
 HERO_SIZES = "(min-width:900px) 52vw, 100vw"
 LAYER_SIZES = "(min-width:900px) 30vw, 72vw"
 
 SVG_PLUS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>'
 SVG_PAUSE = '<svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg><svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l13 8-13 8z"/></svg>'
+SVG_PREV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>'
+SVG_NEXT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>'
 SVG_ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
 
 def hero_srcset(slug, ext):
@@ -61,7 +76,8 @@ for i, p in enumerate(products):
     a, b = p["name_split"]
     tabs.append(
         f'    <button role="tab" class="hero__tab" id="tab-{i}" data-i="{i}" aria-selected="{"true" if first else "false"}" aria-controls="panel-{i}" tabindex="{0 if first else -1}">'
-        f'<span class="w" data-n="{i+1:02d}">{E(a)}</span> <span class="w">{E(b)}</span></button>')
+        f'<span class="tab__thumb"><img src="img/{slug}/thumb-128.webp" width="64" height="64" alt="" loading="lazy" fetchpriority="low" decoding="async"></span>'
+        f'<span class="tab__name"><span class="w">{E(a)}</span> <span class="w">{E(b)}</span></span></button>')
     hm = meta["hero"][slug]
     # produsul activ: srcset real (preload scanner); celelalte: data-srcset, hidratate dupa intro (glue.js)
     at = "srcset" if first else "data-srcset"
@@ -98,11 +114,13 @@ for i, p in enumerate(products):
         </ul>
       </div>
       <div class="prod__info">
-        <span class="badge">{E(p['badge'])}</span><span class="prod__prime">{E(P['meta']['prime_line'])}</span><span class="prod__idx" aria-hidden="true">{i+1:02d} / {N:02d}</span>
+        <span class="badge">{E(p['badge'])}</span>
+        <div class="prod__pager"><button class="pg" type="button" data-step="-1" aria-label="Burgerul anterior">{SVG_PREV}</button><span class="pg__n" aria-hidden="true"><b>{i+1}</b> / {N}</span><button class="pg" type="button" data-step="1" aria-label="Burgerul următor">{SVG_NEXT}</button></div>
         <h2 class="prod__name">{E(p['name'])}</h2>
         <p class="prod__desc">{E(p['desc'])}</p>
         <p class="prod__price" data-price="{E(fm(p['offer']['price']))}"><span class="now">{E(fm(p['offer']['price']))} <small>lei</small></span> <s class="was" aria-label="preț întreg">{E(fm(p['offer']['was']))} lei</s></p>
         <button class="prod__explode" type="button" aria-pressed="false">{SVG_PLUS}Ce are?</button>
+        <span class="prod__prime">{E(P['meta']['prime_line'])}</span>
         <p class="sr">Ingrediente: {E(p['wolt_ingredients'])}.</p>
       </div>
     </article>''')
@@ -112,6 +130,9 @@ for slug, name in [("glovo", "Glovo"), ("wolt", "Wolt"), ("bolt", "Bolt")]:
     link = P["meta"].get("links", {}).get(slug, "")
     plats.append(f'      <a class="plat" data-platform="{slug}" href="{E(link)}" data-href="{E(link)}" target="_blank" rel="noopener noreferrer" aria-label="Comandă pe {name}"><span>{name}</span>{SVG_ARROW}</a>')
 
+plats_nav = [x.replace('class="plat"', 'class="plat plat--nav"').replace(SVG_ARROW, "") for x in plats]
+promo_thumbs = "".join(f'<img src="img/{p["slug"]}/thumb-128.webp" width="64" height="64" alt="" loading="lazy" fetchpriority="low" decoding="async">' for p in products)
+
 promo = {p["name"]: p for p in products}
 mtabs, mpanels = [], []
 for k, c in enumerate(P["menu"]):
@@ -120,7 +141,7 @@ for k, c in enumerate(P["menu"]):
     rows = []
     for name, price in c["items"]:
         pr = promo.get(name) if c["cat"] in ("Burgeri", "Double", "Rolls") else None
-        tag = '<span class="tag">-20% Glovo</span>' if pr else ""
+        tag = '<span class="tag">-20% pe Glovo</span>' if pr else ""
         ing = f'\n          <p class="mrow__i">{E(pr["menu_line"])}</p>' if pr else ""
         rows.append(f'        <li class="mrow"><span class="mrow__n">{E(name)}{tag}</span><span class="mrow__p">{E(price)}<small>lei</small></span>{ing}</li>')
     mpanels.append(f'    <div class="mlist" role="tabpanel" id="mlist-{k}" aria-labelledby="mtab-{k}"{"" if on else " hidden"}>\n      <ul class="mlist__ul">\n' + "\n".join(rows) + "\n      </ul>\n    </div>")
@@ -130,6 +151,8 @@ t = (UX / "v5.template.html").read_text(encoding="utf-8")
 t = sub1(t, "%%HERO_TABS%%", "\n".join(tabs), 1, "tabs")
 t = sub1(t, "%%HERO_PRODS%%", "\n".join(prods), 1, "prods")
 t = sub1(t, "%%PLATS%%", "\n".join(plats), 2, "plats")
+t = sub1(t, "%%PLATS_NAV%%", "\n".join(plats_nav), 1, "plats nav")
+t = sub1(t, "%%PROMO_THUMBS%%", promo_thumbs, 1, "promo thumbs")
 t = sub1(t, "%%MENU_TABS%%", "\n".join(mtabs), 1, "menu tabs")
 t = sub1(t, "%%MENU_PANELS%%", "\n".join(mpanels), 1, "menu panels")
 t = sub1(t, "%%CONCEPT%%", E(P["meta"]["concept_line"]), 1, "concept")
