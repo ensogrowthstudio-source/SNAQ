@@ -1,0 +1,528 @@
+{
+  "_note": "Sursa unica pentru produsele din hero si pentru meniu. Date de pe pagina SNAQ de pe Wolt (25.11.2026), de confirmat cu SNAQ. Dupa orice modificare ruleaza: python3 ux/build_ux.py",
+  "meta": {
+    "currency": "lei",
+    "price_source": "Wolt, 25.11.2026, de confirmat cu SNAQ",
+    "badge": "-20% pe Glovo",
+    "badge_note": "Sursa: pagina SNAQ de pe Glovo, 25.11.2026: -20% la unele articole, -25% cu Glovo Prime. Fara data de final (nu se scrie \"pana pe...\"). Prețurile Wolt (campul price) raman in meniu; offer.price/was sunt pretul Glovo redus / intreg.",
+    "concept_line": "Imagini concept generate, se înlocuiesc cu foto SNAQ.",
+    "fallback": {
+      "hero": [
+        "../assets/placeholder/h1_classic.png",
+        "../assets/placeholder/h3_double.png",
+        "../assets/placeholder/h1_classic.png"
+      ],
+      "exploded": "../assets/placeholder/g1_v1.png",
+      "exploded_bands": null
+    },
+    "links": {
+      "glovo": "https://kaspi.glovoapp.com/ro/ro/bucharest/stores/snaq-buc",
+      "wolt": "",
+      "bolt": ""
+    },
+    "prime_line": "-25% cu Glovo Prime"
+  },
+  "products": [
+    {
+      "slug": "double-bacon",
+      "name": "Double Bacon",
+      "name_split": [
+        "Double",
+        "Bacon"
+      ],
+      "price": 52,
+      "badge": "-20% pe Glovo",
+      "desc": "O carne Black Angus strivită pe plită, două felii de bacon și cheddar, în chiflă unsă cu unt.",
+      "wolt_ingredients": "chiflă pufoasă unsă cu unt, 1 carne vită Black Angus smash, 2 felii bacon, cheddar, sos Dijon, sos Spicy, castraveți murați, ceapă prăjită, sare, piper",
+      "menu_line": "Chiflă unsă cu unt, 1 carne Black Angus smash, 2 felii de bacon, cheddar, sos Dijon, sos Spicy, castraveți murați, ceapă prăjită.",
+      "note": "Dublu = bacon. Are O SINGURA carne.",
+      "alt": "Double Bacon: chiflă unsă cu unt, o carne Black Angus smash, două felii de bacon, cheddar, sos Dijon și Spicy, castraveți murați, ceapă prăjită. Imagine concept generată.",
+      "images": {
+        "hero": "../assets/gen/double-bacon/hero.png",
+        "exploded": "../assets/gen/double-bacon/exploded.png",
+        "loop": "../assets/gen/double-bacon/loop.mp4"
+      },
+      "layers": [
+        {
+          "label": "Chiflă cu unt",
+          "band": [
+            0,
+            27.7
+          ]
+        },
+        {
+          "label": "Sos Dijon și Spicy",
+          "band": [
+            27.7,
+            34.4
+          ]
+        },
+        {
+          "label": "Castraveți murați",
+          "band": [
+            34.4,
+            40.5
+          ]
+        },
+        {
+          "label": "Ceapă prăjită",
+          "band": [
+            40.5,
+            48.3
+          ]
+        },
+        {
+          "label": "Bacon, 2 felii",
+          "band": [
+            48.3,
+            58.1
+          ]
+        },
+        {
+          "label": "Cheddar",
+          "band": [
+            58.1,
+            65.6
+          ]
+        },
+        {
+          "label": "Carne Black Angus",
+          "band": [
+            65.6,
+            75.0
+          ]
+        },
+        {
+          "label": "Chiflă jos",
+          "band": [
+            75.0,
+            100
+          ]
+        }
+      ],
+      "exploded_ar": 0.4,
+      "hero_fit": {
+        "trim": 0.17,
+        "bottom": 0.79
+      },
+      "layers_note": "Straturile si benzile (band = % din inaltimea exploded.png) urmeaza imaginea A1 din 25.11.2026. Daca A1 regenereaza exploded.png, remasoara cu: python3 ux/tools/bands.py <imagine> si actualizeaza band/labels.",
+      "offer": {
+        "platform": "Glovo",
+        "pct": 20,
+        "prime_pct": 25,
+        "price": 41.8,
+        "was": 52.0,
+        "source_date": "2026-11-25"
+      }
+    },
+    {
+      "slug": "double-el-chapo",
+      "name": "Double El Chapo",
+      "name_split": [
+        "Double",
+        "El Chapo"
+      ],
+      "price": 60,
+      "badge": "-20% pe Glovo",
+      "desc": "Două cărni Black Angus strivite, cheddar și trei feluri de ceapă, cu sos andalouse.",
+      "wolt_ingredients": "chiflă pufoasă unsă cu unt, 2 cărni vită Black Angus smash, ceapă, ceapă prăjită, ceapă caramelizată, cheddar, castraveți murați, sos andalouse, sare, piper",
+      "menu_line": "Chiflă unsă cu unt, 2 cărni Black Angus smash, ceapă, ceapă prăjită, ceapă caramelizată, cheddar, castraveți murați, sos andalouse.",
+      "note": "Are DOUA carni.",
+      "alt": "Double El Chapo: chiflă unsă cu unt, două cărni Black Angus smash, cheddar, ceapă crudă, prăjită și caramelizată, castraveți murați, sos andalouse. Imagine concept generată.",
+      "images": {
+        "hero": "../assets/gen/double-el-chapo/hero.png",
+        "exploded": "../assets/gen/double-el-chapo/exploded.png",
+        "loop": "../assets/gen/double-el-chapo/loop.mp4"
+      },
+      "layers": [
+        {
+          "label": "Chiflă cu unt",
+          "band": [
+            0,
+            20.8
+          ]
+        },
+        {
+          "label": "Sos andalouse",
+          "band": [
+            20.8,
+            25.85
+          ]
+        },
+        {
+          "label": "Castraveți murați",
+          "band": [
+            25.85,
+            32.35
+          ]
+        },
+        {
+          "label": "Ceapă prăjită",
+          "band": [
+            32.35,
+            40.55
+          ]
+        },
+        {
+          "label": "Ceapă caramelizată",
+          "band": [
+            40.55,
+            48.75
+          ]
+        },
+        {
+          "label": "Ceapă",
+          "band": [
+            48.75,
+            54.75
+          ]
+        },
+        {
+          "label": "Cheddar",
+          "band": [
+            54.75,
+            61.7
+          ]
+        },
+        {
+          "label": "Carne Black Angus",
+          "band": [
+            61.7,
+            69.35
+          ]
+        },
+        {
+          "label": "Cheddar",
+          "band": [
+            69.35,
+            76.2
+          ]
+        },
+        {
+          "label": "Carne Black Angus",
+          "band": [
+            76.2,
+            84.15
+          ]
+        },
+        {
+          "label": "Chiflă jos",
+          "band": [
+            84.15,
+            100
+          ]
+        }
+      ],
+      "exploded_ar": 0.4,
+      "hero_fit": {
+        "trim": 0.2,
+        "bottom": 0.84
+      },
+      "layers_note": "Straturile si benzile (band = % din inaltimea exploded.png) urmeaza imaginea A1 din 25.11.2026. Daca A1 regenereaza exploded.png, remasoara cu: python3 ux/tools/bands.py <imagine> si actualizeaza band/labels.",
+      "offer": {
+        "platform": "Glovo",
+        "pct": 20,
+        "prime_pct": 25,
+        "price": 48.2,
+        "was": 60.0,
+        "source_date": "2026-11-25"
+      }
+    },
+    {
+      "slug": "italian-beef-roll",
+      "name": "Italian Beef Roll",
+      "name_split": [
+        "Italian",
+        "Beef Roll"
+      ],
+      "price": 60,
+      "badge": "-20% pe Glovo",
+      "desc": "Două chiftele Black Angus zdrobite, parmesan, rucola și sos de trufe negre, rulate în lipie crocantă.",
+      "wolt_ingredients": "lipie crocantă, 2 chiftele vită Black Angus zdrobite, salată iceberg, cartofi prăjiți, parmesan, rucola, roșii, oregano, roșii confiate, sos pesto, sos de trufe negre",
+      "menu_line": "Lipie crocantă, 2 chiftele Black Angus zdrobite, salată iceberg, cartofi prăjiți, parmesan, rucola, roșii, oregano, roșii confiate, sos pesto, sos de trufe negre.",
+      "note": "Roll, nu burger: straturile din exploded sunt o ordine de prezentare, nu o rețetă.",
+      "alt": "Italian Beef Roll: lipie crocantă rulată cu două chiftele Black Angus zdrobite, salată iceberg, cartofi prăjiți, parmesan, rucola, roșii, sos pesto și sos de trufe negre. Imagine concept generată.",
+      "images": {
+        "hero": "../assets/gen/italian-beef-roll/hero.png",
+        "exploded": "../assets/gen/italian-beef-roll/exploded.png",
+        "loop": "../assets/gen/italian-beef-roll/loop.mp4"
+      },
+      "layers": [
+        {
+          "label": "Lipie crocantă",
+          "band": [
+            0,
+            24.15
+          ]
+        },
+        {
+          "label": "Pesto și trufe negre",
+          "band": [
+            24.15,
+            29.75
+          ]
+        },
+        {
+          "label": "Parmesan",
+          "band": [
+            29.75,
+            36.4
+          ]
+        },
+        {
+          "label": "Rucola",
+          "band": [
+            36.4,
+            45.35
+          ]
+        },
+        {
+          "label": "Roșii și roșii confiate",
+          "band": [
+            45.35,
+            53.0
+          ]
+        },
+        {
+          "label": "2 chiftele de vită",
+          "band": [
+            53.0,
+            61.4
+          ]
+        },
+        {
+          "label": "Cartofi prăjiți",
+          "band": [
+            61.4,
+            69.25
+          ]
+        },
+        {
+          "label": "Salată iceberg",
+          "band": [
+            69.25,
+            79.35
+          ]
+        },
+        {
+          "label": "Lipie",
+          "band": [
+            79.35,
+            100
+          ]
+        }
+      ],
+      "exploded_ar": 0.5,
+      "hero_fit": {
+        "trim": 0.18,
+        "bottom": 0.8
+      },
+      "layers_note": "Straturile si benzile (band = % din inaltimea exploded.png) urmeaza imaginea A1 din 25.11.2026. Daca A1 regenereaza exploded.png, remasoara cu: python3 ux/tools/bands.py <imagine> si actualizeaza band/labels.",
+      "offer": {
+        "platform": "Glovo",
+        "pct": 20,
+        "prime_pct": 25,
+        "price": 52.2,
+        "was": 65.0,
+        "source_date": "2026-11-25"
+      }
+    }
+  ],
+  "menu": [
+    {
+      "cat": "Burgeri",
+      "items": [
+        [
+          "Classic",
+          43
+        ],
+        [
+          "SnaqBurger",
+          47
+        ],
+        [
+          "Special",
+          50
+        ],
+        [
+          "El Chapo",
+          48
+        ],
+        [
+          "Chicken Smash",
+          40
+        ],
+        [
+          "Double Bacon",
+          52
+        ],
+        [
+          "Egg&Bacon",
+          52
+        ]
+      ]
+    },
+    {
+      "cat": "Double",
+      "items": [
+        [
+          "Double Classic",
+          56
+        ],
+        [
+          "Double SnaqBurger",
+          60
+        ],
+        [
+          "Double Special",
+          63
+        ],
+        [
+          "Double El Chapo",
+          60
+        ],
+        [
+          "Double Chicken Smash",
+          50
+        ],
+        [
+          "Big Double Bacon",
+          64
+        ],
+        [
+          "Double Egg&Bacon",
+          64
+        ],
+        [
+          "Triple Smash",
+          "70,90"
+        ]
+      ]
+    },
+    {
+      "cat": "Rolls",
+      "items": [
+        [
+          "Smashed Chicken Roll",
+          49
+        ],
+        [
+          "Smashed Beef Roll",
+          56
+        ],
+        [
+          "Italian Beef Roll",
+          60
+        ],
+        [
+          "Beef Cheesy Roll",
+          59
+        ]
+      ]
+    },
+    {
+      "cat": "Cartofi",
+      "items": [
+        [
+          "Naked Fries",
+          22
+        ],
+        [
+          "Cheesy Garlic Fries",
+          36
+        ],
+        [
+          "Paysan Fries",
+          36
+        ],
+        [
+          "Mexicanos Fries",
+          36
+        ],
+        [
+          "Crispy Bacon Fries",
+          42
+        ],
+        [
+          "El Chapo Fries",
+          64
+        ]
+      ]
+    },
+    {
+      "cat": "Salate",
+      "items": [
+        [
+          "Salata Greceasca",
+          36
+        ],
+        [
+          "Salata Chicken Parmesan",
+          46
+        ],
+        [
+          "Lettuce",
+          22
+        ]
+      ]
+    },
+    {
+      "cat": "Sosuri",
+      "items": [
+        [
+          "Andalouse",
+          7
+        ],
+        [
+          "Truffle Mayo",
+          7
+        ],
+        [
+          "Pesto",
+          7
+        ],
+        [
+          "Tzatziki",
+          7
+        ],
+        [
+          "Ketchup",
+          7
+        ],
+        [
+          "Mayo",
+          7
+        ],
+        [
+          "Tartar",
+          7
+        ],
+        [
+          "Mustard",
+          7
+        ],
+        [
+          "Beconnaise",
+          7
+        ],
+        [
+          "Spicy Ketchup",
+          7
+        ]
+      ]
+    },
+    {
+      "cat": "Baby",
+      "items": [
+        [
+          "Cheeseburger",
+          21
+        ],
+        [
+          "Snaq Dog",
+          21
+        ]
+      ]
+    }
+  ]
+}

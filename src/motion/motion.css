@@ -1,0 +1,101 @@
+/* ============================================================
+   SNAQ v5 · motion.css (A3) — doar ce are nevoie animatia ca sa existe.
+   Layout-ul hero-ului (grid, spatieri, culori de butoane) e al lui A2 (ux/).
+   Aici: stari initiale anti-flash, straturile 'Ce are?', etichetele, masca de text.
+   Ordinea in <head>: type.css, motion.css, apoi CSS-ul lui A2.
+   ============================================================ */
+
+:root{
+  --mx-fast:180ms;   /* power2.out */
+  --mx-mid:400ms;    /* power3.out */
+  --mx-slow:650ms;   /* expo.out   */
+  --mx-stagger:60ms;
+}
+
+/* ---- Anti-flash pentru intro --------------------------------------------------
+   <script>document.documentElement.classList.add('mx-pre')</script> in <head> (inline, A4).
+   init() scoate clasa in acelasi tick in care pune starile GSAP. Daca init nu ruleaza
+   deloc (JS cazut), elementele devin vizibile singure dupa 2.8 s: site-ul merge fara animatii. */
+html.mx-pre .hero__word span,
+html.mx-pre .hero__tab,
+html.mx-pre .prod.is-active .prod__visual,
+html.mx-pre .prod.is-active .prod__info > *,
+html.mx-pre .hero__cta{
+  opacity:0;
+  animation:mx-failsafe 1ms 2.8s forwards;
+}
+@keyframes mx-failsafe{to{opacity:1}}
+
+/* ---- Tranzitie intre produse: cel vechi ramane vizibil cat timp iese ---- */
+.hero .prod.is-leaving,
+.hero .prod.is-entering{display:block !important;visibility:visible !important}
+.hero .prod.is-leaving{position:absolute;inset:0;z-index:2;pointer-events:none}
+.hero .prod.is-entering{z-index:1}
+
+/* ---- Masca roll-up pentru nume/pret (creata de JS in jurul continutului) ---- */
+.mx-mask{display:block;overflow:hidden;padding-block:.08em;margin-block:-.08em;
+         /* padding lateral ca sa nu taie ș/ț/Ă si literele italice */
+         padding-inline:.04em;margin-inline:-.04em}
+.mx-roll{display:block;will-change:auto}
+.prod__price .mx-mask{display:inline-block;vertical-align:bottom}
+
+/* ---- Vizual: containerul pentru straturi ---- */
+.hero .prod__visual{position:relative}
+.hero .prod__layers{position:absolute;inset:0;pointer-events:none;visibility:hidden;overflow:visible}
+.hero .prod__layers .layer{
+  position:absolute;left:50%;top:50%;
+  height:auto;max-width:none;
+  transform-origin:50% 50%;
+  user-select:none;-webkit-user-drag:none;
+}
+
+/* ---- Video loop optional: sta peste imaginea asamblata, invizibil pana porneste ---- */
+.hero .prod__visual .prod__loop{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;pointer-events:none}
+
+/* ---- Video loop optional: sta peste imaginea asamblata, invizibil pana porneste ---- */
+.hero .prod__visual .prod__loop{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;pointer-events:none}
+
+/* ---- Etichete ---- */
+.hero .prod__labels{
+  position:absolute;inset:0;margin:0;padding:0;list-style:none;
+  pointer-events:none;counter-reset:mxl;
+}
+.hero .prod__labels li{
+  position:absolute;left:62%;top:50%;
+  width:max-content;max-width:40vw;     /* JS il recalculeaza: pana la marginea ecranului */
+  padding-left:2px;
+  opacity:0;visibility:hidden;
+  counter-increment:mxl;
+  text-wrap:balance;
+}
+/* numarul in lila (accent mic, plan-v5 §5), pe acelasi rand cu textul ca eticheta sa ramana pe un rand */
+.hero .prod__labels li::before{
+  content:counter(mxl,decimal-leading-zero);
+  display:inline-block;vertical-align:.12em;
+  font:700 10px/1 var(--font-text,"Archivo",sans-serif);
+  letter-spacing:.1em;
+  color:var(--snaq-lilac,#9D8CE0);
+  margin-right:6px;
+}
+/* firul de 1px galben: creat de JS ca <i class="mx-line">, ancorat la marginea din stanga a etichetei */
+.hero .prod__labels .mx-line{
+  position:absolute;right:100%;top:50%;
+  height:1px;width:var(--mx-line,24px);margin-right:-2px;
+  background:var(--snaq-yellow,#F8B018);
+  transform-origin:0 50%;
+  transform:scaleX(0);
+}
+.hero .prod__labels .mx-line::before{      /* punctul de la capatul dinspre strat */
+  content:"";position:absolute;left:-2px;top:-2px;width:5px;height:5px;border-radius:50%;
+  background:var(--snaq-yellow,#F8B018);
+}
+.hero .prod__labels li.mx-noline .mx-line{display:none}
+
+/* ---- Reduced motion: nimic nu se misca, totul ramane functional ---- */
+@media (prefers-reduced-motion:reduce){
+  html.mx-pre .hero__word span,
+  html.mx-pre .hero__tab,
+  html.mx-pre .prod.is-active .prod__visual,
+  html.mx-pre .prod.is-active .prod__info > *,
+  html.mx-pre .hero__cta{opacity:1;animation:none}
+}

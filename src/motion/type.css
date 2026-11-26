@@ -1,0 +1,155 @@
+/* ============================================================
+   SNAQ v5 · type.css — sistemul tipografic (A3)
+   Fonturi: Anton (display) + Archivo 400/700 (text), ambele cu ș ț Ș Ț ă â î verificate in cmap.
+   Scara e fluida 360 -> 1440 px:  clamp(min, interceptRem + slopeVw, max)
+   ============================================================ */
+
+@font-face{
+  font-family:"Anton";
+  src:url("../src/site/src/fonts/anton-400.woff2") format("woff2");
+  font-weight:400;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:"Archivo";
+  src:url("../src/site/src/fonts/archivo-400.woff2") format("woff2");
+  font-weight:400;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:"Archivo";
+  src:url("../src/site/src/fonts/archivo-700.woff2") format("woff2");
+  font-weight:700;font-style:normal;font-display:swap;
+}
+
+:root{
+  /* culori (plan-v5 §5) */
+  --snaq-bg:#0D0B09;
+  --snaq-yellow:#F8B018;
+  --snaq-cream:#F8F3E8;
+  --snaq-lilac:#9D8CE0;
+
+  --font-display:"Anton","Impact","Arial Narrow",sans-serif;
+  --font-text:"Archivo",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+
+  /* scara fluida (360 -> 1440) */
+  --fs-word:min(37vw, 52vh);                              /* SMASH: Anton 'SMASH' = 2.653em, deci 37vw = ~98% din latime */
+  --fs-name:clamp(2.5rem, 1.833rem + 2.963vw, 4.5rem);   /* 40 -> 72 px */
+  --fs-price:clamp(1.75rem, 1.417rem + 1.481vw, 2.75rem);/* 28 -> 44 px */
+  --fs-desc:clamp(.9375rem, .875rem + .278vw, 1.125rem); /* 15 -> 18 px */
+  --fs-tab:clamp(.8125rem, .771rem + .185vw, .9375rem);  /* 13 -> 15 px */
+  --fs-label:.8125rem;                                    /* 13 px fix, plan-v5 §5 */
+  --fs-badge:clamp(1rem, .9rem + .46vw, 1.25rem);        /* 16 -> 20 px */
+  --fs-btn:clamp(.9375rem, .9rem + .1vw, 1rem);
+
+  --lh-display:.92;
+  --lh-text:1.5;
+  --track-caps:.06em;
+}
+
+/* ---------- SMASH uriasul din spatele burgerului ---------- */
+.hero__word{
+  font-family:var(--font-display);
+  font-size:var(--fs-word);
+  line-height:.8;
+  letter-spacing:-.005em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  text-align:center;
+  user-select:none;
+  pointer-events:none;
+}
+.hero__word span{
+  display:inline-block;
+  /* varianta implicita (aleasa dupa test pe #0D0B09): contur galben fin + umplere foarte slaba.
+     Contur-only se pierde pe ecranele mici; umplerea solida la 10-12% pare 'pata'.
+     Hibridul tine forma citibila fara sa concureze cu burgerul. */
+  color:rgba(248,176,24,.075);
+  -webkit-text-stroke:1.5px rgba(248,176,24,.55);
+  paint-order:stroke fill;
+}
+.hero__word--solid span{               /* varianta B: umplere galbena la opacitate mica, fara contur */
+  color:rgba(248,176,24,.14);
+  -webkit-text-stroke:0;
+}
+.hero__word--outline span{             /* varianta C: contur pur */
+  color:transparent;
+  -webkit-text-stroke:2px rgba(248,176,24,.6);
+}
+
+/* ---------- Tab-uri ---------- */
+.hero__tab{
+  font-family:var(--font-text);
+  font-weight:700;
+  font-size:var(--fs-tab);
+  line-height:1.2;
+  letter-spacing:var(--track-caps);
+  text-transform:uppercase;
+}
+
+/* ---------- Produs ---------- */
+.prod__name{
+  font-family:var(--font-display);
+  font-weight:400;
+  font-size:var(--fs-name);
+  line-height:var(--lh-display);
+  letter-spacing:.005em;
+  text-transform:uppercase;
+  text-wrap:balance;
+  color:var(--snaq-cream);
+}
+.prod__desc{
+  font-family:var(--font-text);
+  font-weight:400;
+  font-size:var(--fs-desc);
+  line-height:var(--lh-text);
+  color:rgba(248,243,232,.78);
+  text-wrap:pretty;
+  max-width:34ch;
+}
+.prod__price{
+  font-family:var(--font-display);
+  font-size:var(--fs-price);
+  line-height:1;
+  letter-spacing:.01em;
+  font-variant-numeric:lining-nums tabular-nums;
+  color:var(--snaq-yellow);
+}
+.prod__price small,.prod__price .cur{
+  font-family:var(--font-text);font-weight:700;
+  font-size:.42em;letter-spacing:var(--track-caps);text-transform:uppercase;
+  margin-left:.35em;color:var(--snaq-cream);
+}
+.badge{
+  font-family:var(--font-display);
+  font-size:var(--fs-badge);
+  line-height:1;
+  letter-spacing:.03em;
+  color:#0D0B09;                       /* DOAR negru pe galben */
+  background:var(--snaq-yellow);
+}
+
+/* ---------- Etichete ingrediente ---------- */
+.prod__labels li{
+  font-family:var(--font-text);
+  font-weight:700;
+  font-size:var(--fs-label);
+  line-height:1.25;
+  letter-spacing:.01em;
+  color:var(--snaq-cream);
+}
+
+/* ---------- Butoane ---------- */
+.prod__explode,.hero__cta{
+  font-family:var(--font-text);
+  font-weight:700;
+  font-size:var(--fs-btn);
+  letter-spacing:.04em;
+}
+.hero__cta{text-transform:uppercase}
+
+/* ---------- Randare corecta pentru ș ț ---------- */
+html{
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+  font-kerning:normal;
+}
