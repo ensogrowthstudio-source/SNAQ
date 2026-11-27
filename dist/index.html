@@ -626,6 +626,18 @@ a{color:inherit}
 .prod.is-exploded .prod__pause{display:none}
 @media (prefers-reduced-motion:reduce){.hero__word span{transition:none}}
 
+/* link de prezentare spre cealalta varianta (footer): discret */
+.foot .foot__alt{font-weight:400;font-size:.875rem;color:var(--mute);justify-self:start}
+
+/* etichete „Ce are?": cand stiva nu incape intre tab-uri si info (placeLabels pune .mx-tight), o linie de 11px, fara numar; merge pe ambele teme */
+.hero .prod__labels.mx-tight li{font-size:.6875rem;line-height:1.1}
+.hero .prod__labels.mx-tight li::before{display:none}
+.hero .prod__labels.mx-tight li{padding-left:4px}
+
+/* QA final: motion.css forta display:block pe .prod in timpul schimbarii; pe desktop .prod e grid (info centrat vertical),
+   deci blocul de text sarea ~130px in jos la finalul tranzitiei (CLS 0.10 la fiecare schimbare). Pastram grid-ul. */
+@media (min-width:900px){.hero .prod.is-leaving,.hero .prod.is-entering{display:grid !important}}
+
 </style>
 </head>
 <body>
@@ -935,6 +947,7 @@ a{color:inherit}
     <a href="https://www.instagram.com/snaq.ro/" target="_blank" rel="noopener" aria-label="SNAQ pe Instagram, @snaq.ro">Instagram @snaq.ro</a>
     <p class="foot__concept">Imagini concept generate, se înlocuiesc cu foto SNAQ.</p>
     <p>Propunere de design realizată de Enso Studio. Nu este site-ul oficial SNAQ. Prețurile, promoția, adresa și linkurile sunt orientative și se confirmă cu SNAQ.</p>
+    <a class="foot__alt" href="alb/index.html" data-variant-link>Vezi varianta pe alb</a>
   </div>
 </footer>
 
@@ -1143,7 +1156,7 @@ a{color:inherit}
       d.ty = (d.cy - ay) * Hb;
       d.right = Xc + (d.cx - 0.5) * s + d.w * s / 2;   // marginea dreapta a stratului (fractie din Wb) in starea explodata
     });
-    return { data: data, A: A, s: s, Wb: Wb, Hb: Hb, labelX: labelX, bot: (bot0 !== undefined && vr) ? bot0 - vr.top : Hb * 0.97 };
+    return { data: data, A: A, s: s, Wb: Wb, Hb: Hb, labelX: labelX, bot: (bot0 !== undefined && vr) ? bot0 - vr.top : Hb * 0.97, top: (top0 !== undefined && vr) ? top0 - vr.top : 0 };
   }
 
   function place(p) {            // pune straturile in starea asamblata (invizibile pana la explode)
@@ -1174,11 +1187,20 @@ a{color:inherit}
       g.set(li, { yPercent: -50 });
     });
     if (hasLayers && m > 1) {
-      var gp = 4, its = p.labelEls.map(function (li, k) { var h = li.offsetHeight || 16, c = G.data[k].cy * G.Hb; return { li: li, h: h, top: c - h / 2 }; }), n2 = its.length, pass;
+      var ul = p.labelEls[0].parentNode, gp = 4, need2, its, n2, pass;
+      /* QA final: daca stiva de etichete nu incape intre tab-uri (G.top) si info (G.bot), trece pe varianta compacta (o linie, 11px) pe orice tema */
+      if (ul && ul.classList) {
+        ul.classList.remove('mx-tight');
+        need2 = p.labelEls.reduce(function (a, li) { return a + (li.offsetHeight || 16) + gp; }, -gp);
+        if (need2 > G.bot - G.top) ul.classList.add('mx-tight');
+      }
+      its = p.labelEls.map(function (li, k) { var h = li.offsetHeight || 16, c = G.data[k].cy * G.Hb; return { li: li, h: h, top: c - h / 2 }; });
+      n2 = its.length;
       for (pass = 0; pass < 2; pass++) {
         for (var a = 1; a < n2; a++) if (its[a].top < its[a - 1].top + its[a - 1].h + gp) its[a].top = its[a - 1].top + its[a - 1].h + gp;
         for (var b = n2 - 1; b >= 0; b--) { var lim = b === n2 - 1 ? G.bot : its[b + 1].top - gp; if (its[b].top + its[b].h > lim) its[b].top = lim - its[b].h; }
       }
+      if (its[0].top < G.top) { var dy0 = G.top - its[0].top; its.forEach(function (it) { it.top += dy0; }); }   /* niciodata deasupra tab-urilor */
       its.forEach(function (it) { it.li.style.top = ((it.top + it.h / 2) / G.Hb * 100) + '%'; });
     }
   }

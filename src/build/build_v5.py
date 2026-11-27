@@ -250,16 +250,25 @@ motion_js = sub1(motion_js, "      d.ty = (d.cy - ay) * Hb;", "      if (cyShift
 
 # etichete: de-coliziune verticala (etichetele pe 2 randuri se suprapuneau cu vecinele cand stratul e subtire / stiva comprimata)
 motion_js = sub1(motion_js, "    return { data: data, A: A, s: s, Wb: Wb, Hb: Hb, labelX: labelX };",
-                 "    return { data: data, A: A, s: s, Wb: Wb, Hb: Hb, labelX: labelX, bot: (bot0 !== undefined && vr) ? bot0 - vr.top : Hb * 0.97 };", 1, "compute return")
+                 "    return { data: data, A: A, s: s, Wb: Wb, Hb: Hb, labelX: labelX, bot: (bot0 !== undefined && vr) ? bot0 - vr.top : Hb * 0.97, top: (top0 !== undefined && vr) ? top0 - vr.top : 0 };", 1, "compute return")
 motion_js = sub1(motion_js, "      g.set(li, { yPercent: -50 });\n    });\n",
 """      g.set(li, { yPercent: -50 });
     });
     if (hasLayers && m > 1) {
-      var gp = 4, its = p.labelEls.map(function (li, k) { var h = li.offsetHeight || 16, c = G.data[k].cy * G.Hb; return { li: li, h: h, top: c - h / 2 }; }), n2 = its.length, pass;
+      var ul = p.labelEls[0].parentNode, gp = 4, need2, its, n2, pass;
+      /* QA final: daca stiva de etichete nu incape intre tab-uri (G.top) si info (G.bot), trece pe varianta compacta (o linie, 11px) pe orice tema */
+      if (ul && ul.classList) {
+        ul.classList.remove('mx-tight');
+        need2 = p.labelEls.reduce(function (a, li) { return a + (li.offsetHeight || 16) + gp; }, -gp);
+        if (need2 > G.bot - G.top) ul.classList.add('mx-tight');
+      }
+      its = p.labelEls.map(function (li, k) { var h = li.offsetHeight || 16, c = G.data[k].cy * G.Hb; return { li: li, h: h, top: c - h / 2 }; });
+      n2 = its.length;
       for (pass = 0; pass < 2; pass++) {
         for (var a = 1; a < n2; a++) if (its[a].top < its[a - 1].top + its[a - 1].h + gp) its[a].top = its[a - 1].top + its[a - 1].h + gp;
         for (var b = n2 - 1; b >= 0; b--) { var lim = b === n2 - 1 ? G.bot : its[b + 1].top - gp; if (its[b].top + its[b].h > lim) its[b].top = lim - its[b].h; }
       }
+      if (its[0].top < G.top) { var dy0 = G.top - its[0].top; its.forEach(function (it) { it.top += dy0; }); }   /* niciodata deasupra tab-urilor */
       its.forEach(function (it) { it.li.style.top = ((it.top + it.h / 2) / G.Hb * 100) + '%'; });
     }
 """, 1, "placeLabels decoliziune")
@@ -317,6 +326,29 @@ t = sub1(t, '<meta name="theme-color" content="#0D0B09">\n', '<meta name="theme-
 # ------------------------------------------------------------------ 4) harta JSON a straturilor (la final)
 t = sub1(t, "<script>" + gsap_js[:40], "<script>window.SNAQ_LAYERS=" + json.dumps(layers_map, separators=(",", ":")) + ";</script>\n<script>" + gsap_js[:40], 1, "SNAQ_LAYERS")
 
+# ------------------------------------------------------------------ link de prezentare intre variante (discret, in footer)
+FOOT_END = '</p>\n  </div>\n</footer>'
+t = sub1(t, FOOT_END, '</p>\n    <a class="foot__alt" href="alb/index.html" data-variant-link>Vezi varianta pe alb</a>\n  </div>\n</footer>', 1, "footer link dark")
+
+# ------------------------------------------------------------------ VARIANTA PE ALB (theme light), din ACELASI html + snippets/light.css
+def build_light(d):
+    """d = html-ul variantei pe inchis (dupa toate inlocuirile). Aceeasi pagina, aceleasi texte si JS; difera: tema (light.css),
+    fara video, imaginile se iau din ../img/ (nu se duplica), meta theme-color, link-ul de prezentare."""
+    l = d
+    # fara video: fundalul inchis e copt in ele; burgerul ramane viu cu idle-ul din motion.js
+    l = rx(l, r'<div class="prod__loopwrap">.*?</video></div></div>\n\s*<button class="prod__pause".*?</button>', "", len(products), label="video scos (alb)")
+    # imagini reutilizate din dist/img prin ../img/
+    l, n = re.subn(r'(?<![\w/.-])img/(?=(?:double-bacon|double-el-chapo|italian-beef-roll|press|assemble|local)\b)', "../img/", l)
+    assert n > 20, f"cai img: doar {n}"
+    assert not re.search(r'(?<![\w/.])(?<!\.\./)img/(?:double|italian|press|assemble|local)', l), "cai img ramase fara ../"
+    # meta
+    l = sub1(l, '<meta name="theme-color" content="#0D0B09">', '<meta name="theme-color" content="#FBF8F2">\n<meta name="color-scheme" content="light">', 1, "theme-color alb")
+    l = sub1(l, "<title>SNAQ · Smashed burgers în București (propunere de design)</title>", "<title>SNAQ · Smashed burgers în București (propunere de design, varianta pe alb)</title>", 1, "title alb")
+    l = sub1(l, "</style>\n</head>", read(B / "snippets/light.css") + "\n</style>\n</head>", 1, "light.css")
+    # link de prezentare
+    l = sub1(l, '<a class="foot__alt" href="alb/index.html" data-variant-link>Vezi varianta pe alb</a>', '<a class="foot__alt" href="../index.html" data-variant-link>Vezi varianta pe închis</a>', 1, "link alb->inchis")
+    return l
+
 # ------------------------------------------------------------------ iesiri
 out = B / "snaq-demo-v5.html"
 out.write_text(t, encoding="utf-8")
@@ -328,5 +360,9 @@ for s in [p["slug"] for p in products]:
     shutil.copy(B / "media" / f"{s}.mp4", DIST / "media" / f"{s}.mp4")
 for n in ("press", "assemble", "local"):
     shutil.copy(IMG / f"{n}.webp", DIST / "img" / f"{n}.webp")
+(DIST / "alb").mkdir()
+light_html = build_light(t)
+(DIST / "alb" / "index.html").write_text(light_html, encoding="utf-8")
+print(f"alb/index.html {len(light_html)/1024:.0f} KB (imagini din ../img/, fara video)")
 size = lambda p: sum(f.stat().st_size for f in Path(p).rglob("*") if f.is_file())
 print(f"html {len(t)/1024:.0f} KB | dist img {size(DIST/'img')/1024:.0f} KB | media {size(DIST/'media')/1024:.0f} KB")

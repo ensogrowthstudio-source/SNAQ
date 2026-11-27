@@ -46,3 +46,15 @@
 .hero:has(.prod.is-exploded) .hero__word span{opacity:.1}
 .prod.is-exploded .prod__pause{display:none}
 @media (prefers-reduced-motion:reduce){.hero__word span{transition:none}}
+
+/* link de prezentare spre cealalta varianta (footer): discret */
+.foot .foot__alt{font-weight:400;font-size:.875rem;color:var(--mute);justify-self:start}
+
+/* etichete „Ce are?": cand stiva nu incape intre tab-uri si info (placeLabels pune .mx-tight), o linie de 11px, fara numar; merge pe ambele teme */
+.hero .prod__labels.mx-tight li{font-size:.6875rem;line-height:1.1}
+.hero .prod__labels.mx-tight li::before{display:none}
+.hero .prod__labels.mx-tight li{padding-left:4px}
+
+/* QA final: motion.css forta display:block pe .prod in timpul schimbarii; pe desktop .prod e grid (info centrat vertical),
+   deci blocul de text sarea ~130px in jos la finalul tranzitiei (CLS 0.10 la fiecare schimbare). Pastram grid-ul. */
+@media (min-width:900px){.hero .prod.is-leaving,.hero .prod.is-entering{display:grid !important}}

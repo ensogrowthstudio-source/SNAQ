@@ -1,0 +1,143 @@
+/* ===== SNAQ · varianta pe ALB (theme light) — se adauga dupa overrides.css, doar in dist/alb/index.html =====
+   Fundal alb cald, text aproape negru. Galbenul #F8B018 e mereu SUPRAFATA (text negru pe el), niciodata text.
+   Lila #9D8CE0 -> #5B4BB5 ca text. Fara video (fundalul lor inchis e copt in ele). */
+:root{
+  --bg:#FBF8F2;            /* alb cald */
+  --surface:#F2ECE1;       /* suprafata secundara: carduri, sectiuni alternante */
+  --card:#FFFDF9;          /* panouri ridicate (sheet) */
+  --ink:#15110C;           /* aproape negru cald, 17.7:1 pe --bg */
+  --mute:#5E5548;          /* 6.9:1 pe --bg, 6.2:1 pe --surface */
+  --line:rgba(21,17,12,.16);
+  --line-strong:#8A8072;   /* 3.66:1: borduri de butoane/chip-uri (UI >= 3:1) */
+  --lila:#5B4BB5;          /* 6.35:1 pe --bg */
+  --on-y:#15110C;
+  --snaq-cream:#15110C;--snaq-bg:#FBF8F2;--snaq-lilac:#5B4BB5;
+  --shadow-ink:21,17,12;
+}
+html{background:var(--bg);color-scheme:light}
+body{background:var(--bg);color:var(--ink)}
+
+/* focus: galben lipit de element + contur negru in afara = vizibil pe alb, pe galben si pe negru */
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px;box-shadow:0 0 0 3px var(--y)}
+.skip{color:var(--on-y)}
+
+/* butoane */
+.btn--y,.badge,.tag,.hero__cta,.skip{color:var(--on-y)}
+.btn--y,.hero__cta{box-shadow:inset 0 0 0 2px var(--ink)}
+.btn--y:focus-visible,.hero__cta:focus-visible{box-shadow:0 0 0 3px var(--y)}
+.btn--o{border-color:var(--ink);color:var(--ink);background:transparent}
+
+/* ===== bara de sus: alb solid, linie fina mereu ===== */
+.top{background:var(--bg);border-bottom-color:var(--line)}
+.top__word{color:var(--ink)}
+.top__burger i{background:var(--ink);box-shadow:0 -8px 0 var(--ink),0 8px 0 var(--ink)}
+
+/* ===== HERO ===== */
+/* banda galbena sub bara: eticheta promotiei, full-bleed */
+.hero__intro{padding-top:0}
+.hero__eyebrow{margin:0 calc(var(--pad) * -1) 9px;padding:8px var(--pad);background:var(--y);color:var(--on-y);border-bottom:2px solid var(--ink)}
+.hero__eyebrow b{color:var(--on-y)}
+.hero__eyebrow i{color:var(--on-y)}
+.hero__h1{color:var(--ink)}
+
+/* SMASH: varianta aleasa = C (galben plin + contur negru fin). Variantele A/B/C testate: qa/ALB.md */
+.hero__word span{color:var(--y);-webkit-text-stroke:3px var(--ink);paint-order:stroke fill}
+html[data-smash="a"] .hero__word span{color:var(--y);-webkit-text-stroke:0}
+html[data-smash="b"] .hero__word span{color:transparent;-webkit-text-stroke:2px var(--ink)}
+html[data-smash="c"] .hero__word span{color:var(--y);-webkit-text-stroke:3px var(--ink)}
+.hero:has(.prod.is-exploded) .hero__word span{opacity:.16}
+
+.hero__tab{border-color:var(--line-strong);background:var(--card);color:var(--ink)}
+.hero__tab[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.hero__tab .tab__thumb{background:radial-gradient(circle at 50% 38%,#FFFFFF,#EADFC8 80%)}
+.hero__tab[aria-selected="true"] .tab__thumb{box-shadow:0 0 0 2.5px var(--y)}
+
+/* umbra de contact sub burger (pseudo-element cu radial-gradient, fara filter) */
+.prod__visual::before{content:"";position:absolute;z-index:0;left:14%;right:14%;top:calc(var(--burger-bottom) * 100% - 4.5%);height:6.5%;
+  background:radial-gradient(ellipse 50% 50% at 50% 50%,rgba(var(--shadow-ink),.34),rgba(var(--shadow-ink),.12) 55%,rgba(var(--shadow-ink),0) 100%);pointer-events:none}
+.prod.is-exploded .prod__visual::before{opacity:0}
+
+/* ===== produs: info ===== */
+.prod__name{color:var(--ink);letter-spacing:.012em}
+.prod__desc{color:var(--ink)}
+.prod__price .now{color:var(--ink);background:linear-gradient(transparent 66%,var(--y) 66%,var(--y) 94%,transparent 94%);padding:0 .12em;margin-left:-.12em}
+.prod__price small{color:var(--ink)}
+.prod__price .was{color:var(--mute)}
+.prod__prime{color:var(--mute)}
+.badge{background:var(--y);color:var(--on-y);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.pg{color:var(--ink)}
+.pg::before{border-color:var(--line-strong);background:var(--card)}
+.pg:active::before{background:var(--surface)}
+.pg__n{color:var(--mute)}
+.pg__n b{color:var(--ink)}
+.prod__explode{border-color:var(--ink);color:var(--ink);background:var(--card)}
+.prod__explode[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.hero__deliv{color:var(--mute)}
+
+/* etichete „Ce are?": fir negru + punct galben cu inel negru; numarul in lila inchis */
+.hero .prod__labels li{color:var(--ink);text-shadow:0 0 6px var(--bg),0 0 2px var(--bg)}
+.hero .prod__labels .mx-line{background:var(--ink)}
+.hero .prod__labels .mx-line::before{background:var(--y);box-shadow:0 0 0 1px var(--ink);left:-3px;top:-3px;width:7px;height:7px}
+
+/* ===== sectiuni ===== */
+.eyebrow{color:var(--lila)}
+.lead{color:var(--ink)}
+.fine,.menu__note{color:var(--mute)}
+.steps,.step{border-color:var(--line)}
+.step__n{color:var(--ink);-webkit-text-stroke:0;text-shadow:3px 3px 0 var(--y)}
+.step__img{background:var(--surface)}
+#cum{background:var(--surface)}
+#cum .step__img{background:var(--bg)}
+.mtab{border-color:var(--line-strong);color:var(--ink);background:var(--card)}
+.mtab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.mtabs.has-more{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 44px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 44px),transparent)}
+.mrow,.mrow:last-child{border-color:var(--line)}
+.mrow__p small{color:var(--mute)}
+.mrow__i{color:var(--mute)}
+#local{background:var(--surface)}
+.local__ph{background:var(--bg)}
+
+/* Comanda: bloc galben mare, plin; butoane negre */
+.final{background:var(--y);color:var(--on-y);border-top:2px solid var(--ink)}
+.final .h2,.final .lead{color:var(--on-y)}
+.final .plat{background:var(--ink);color:var(--bg)}
+.final .plat:active{background:var(--bg);color:var(--ink)}
+.final :focus-visible{outline-color:var(--ink);box-shadow:0 0 0 3px var(--bg)}
+
+/* platforme in sheet: clare (alb + contur negru) */
+.order-sheet__panel .plat{background:var(--bg);color:var(--ink);border:2px solid var(--ink)}
+.order-sheet__panel .plat:active{background:var(--y);color:var(--on-y)}
+.plat:active{background:var(--y);color:var(--on-y)}
+
+/* subsol */
+.foot{border-top-color:var(--line);background:var(--bg)}
+.foot p{color:var(--mute)}
+.foot__concept{color:var(--ink)}
+.foot__alt{display:inline-flex;align-items:center;min-height:44px;font-weight:700;font-size:.875rem;text-underline-offset:4px;color:var(--mute)}
+
+/* dock */
+.dock{background:rgba(251,248,242,.97);border-top:2px solid var(--ink)}
+.dock b{color:var(--ink)}
+
+/* ===== sheet comanda + panou navigare: alb solid ===== */
+.order-sheet__bg,.menu-panel__bg{background:rgba(var(--shadow-ink),.5)}
+.order-sheet__panel{background:var(--card);border-color:var(--line-strong)}
+.order-sheet__panel p{color:var(--mute)}
+.menu-panel__panel{background:var(--bg)}
+.promo-card{background:var(--surface);border-color:var(--line)}
+.promo-card__thumbs img{background:radial-gradient(circle at 50% 38%,#FFFFFF,#EADFC8 80%);border-color:var(--surface)}
+.promo-card__txt span{justify-self:start;padding:2px 7px;border-radius:6px;background:var(--y);color:var(--on-y)}
+.promo-card>svg{color:var(--ink)}
+.menu-panel__links a{border-bottom-color:var(--line)}
+.menu-panel__links a:first-child{border-top-color:var(--line)}
+.menu-panel__links a svg{color:var(--ink)}
+.menu-panel__links a:active{background:var(--surface)}
+.menu-panel__lbl{color:var(--mute)}
+.menu-panel__meta p{color:var(--mute)}
+.plats--nav .plat{background:var(--ink);color:var(--bg)}
+
+@media (min-width:900px){
+  .top__nav a{color:var(--ink)}
+  .hero__word span{-webkit-text-stroke-width:2.5px}
+  .hero__eyebrow{padding-block:9px}
+}
